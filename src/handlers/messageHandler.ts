@@ -8,7 +8,7 @@ import { logError } from '../utils/logger.js';
  * @param topic
  * @param payload
  */
-export function handleMessage(topic: string, payload: Buffer): void {
+export async function handleMessage(topic: string, payload: Buffer): Promise<void> {
 
   // In case we just want to handle it as a MeshPacket message
   try {
@@ -21,7 +21,7 @@ export function handleMessage(topic: string, payload: Buffer): void {
   // In case this is a ServiceEnvelope message
   try {
     const serviceEnvelope = Protobuf.Mqtt.ServiceEnvelope.fromBinary(payload);
-    console.log("Received ServiceEnvelope:", {
+    console.log('Received ServiceEnvelope:', {
       channelId: serviceEnvelope.channelId,
       gatewayId: serviceEnvelope.gatewayId,
     });
@@ -29,16 +29,16 @@ export function handleMessage(topic: string, payload: Buffer): void {
     // In case this is a MeshPacket message inside the ServiceEnvelope
     if (serviceEnvelope.packet) {
       const packet = serviceEnvelope.packet;
-      const { case: variantCase, value: variantValue } = packet.payloadVariant;
+      const { case: variantCase } = packet.payloadVariant;
 
       if (variantCase === 'encrypted') {
         // Attempt to decrypt the packet if it is encrypted
         try {
           const decryptedPayload = decryptPayload(packet);
           const dataMessage = Protobuf.Mesh.Data.fromBinary(decryptedPayload);
-          parseDataMessage(dataMessage, packet, serviceEnvelope);
+          await parseDataMessage(dataMessage, packet, serviceEnvelope);
         } catch (error) {
-          logError("Failed to decrypt packet:", error);
+          logError('Failed to decrypt packet:', error);
         }
       } else if (variantCase === 'decrypted') {
         // Handle decrypted packets if necessary

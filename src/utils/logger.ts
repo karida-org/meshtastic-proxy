@@ -16,6 +16,10 @@ export function logInfo(message: string, data?: any): void {
  * @param message
  * @param error
  */
-export function logError(message: string, error: any): void {
-  console.error(`${message}:`, error);
+export function logError(message: string, error?: any): void {
+  if (error) {
+    console.error(`${message}:`, error);
+  } else {
+    console.error(message);
+  }
 }

@@ -1,7 +1,7 @@
 import { Protobuf } from '@meshtastic/js';
 import axios from 'axios';
 import { traccarOsmAndUrl } from '../config.js';
-import { checkDeviceExists, createDevice } from '../traccarClient.js';
+import { checkDeviceExists, createDevice } from '../handlers/traccarClient.js';
 import { logInfo, logError } from '../utils/logger.js';
 import { getDeviceCacheEntry } from '../utils/cache.js';
 

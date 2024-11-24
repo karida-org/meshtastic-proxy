@@ -1,10 +1,10 @@
 import { Protobuf } from '@meshtastic/js';
 import { PortNum } from '../utils/types.js';
 import { logInfo } from '../utils/logger.js';
-import { handleTextMessage } from './textMessageHandler.js';
-import { handlePositionMessage } from './positionHandler.js';
-import { handleNodeInfoMessage } from './nodeInfoHandler.js';
-import { handleTelemetryMessage } from './telemetryHandler.js';
+import { handleTextMessage } from '../portnums/textMessage.js';
+import { handlePositionMessage } from '../portnums/position.js';
+import { handleNodeInfoMessage } from '../portnums/nodeInfo.js';
+import { handleTelemetryMessage } from '../portnums/telemetry.js';
 
 /**
  * Parses a Data message and delegates to the appropriate handler

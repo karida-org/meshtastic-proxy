@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { logInfo, logError } from './utils/logger.js';
-import { traccarApiUrl, traccarApiToken } from './config.js';
-import { getDeviceExists, setDeviceExists } from './utils/cache.js';
+import { logInfo, logError } from '../utils/logger.js';
+import { traccarApiUrl, traccarApiToken } from '../config.js';
+import { getDeviceExists, setDeviceExists } from '../utils/cache.js';
 
 export async function checkDeviceExists(identifier: string): Promise<boolean> {
   // Check the cache first

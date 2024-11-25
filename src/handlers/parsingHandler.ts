@@ -5,6 +5,10 @@ import { handleTextMessage } from '../portnums/textMessage.js';
 import { handlePositionMessage } from '../portnums/position.js';
 import { handleNodeInfoMessage } from '../portnums/nodeInfo.js';
 import { handleTelemetryMessage } from '../portnums/telemetry.js';
+import { handleWaypointMessage } from '../portnums/waypoint.js';
+import { handleNeighborInfoMessage } from '../portnums/neighborInfo.js';
+import { handleTraceRouteMessage } from '../portnums/traceroute.js';
+import { handleMapReportMessage } from '../portnums/mapreport.js';
 
 /**
  * Parses a Data message and delegates to the appropriate handler
@@ -19,6 +23,13 @@ export async function parseDataMessage(
 ): Promise<void> {
   const { portnum } = dataMessage;
   const identifier = packet.from.toString(16); // Device identifier in hex
+  const channelId = serviceEnvelope.channelId.toString(16);
+  const gatewayId = serviceEnvelope.gatewayId.toString(16);
+
+  logInfo(`Received Data Message on ${channelId} (via ${gatewayId})`, {
+    device: identifier,
+    message: PortNum[portnum]
+  });
 
   switch (portnum) {
     case PortNum.TEXT_MESSAGE_APP:
@@ -35,6 +46,22 @@ export async function parseDataMessage(
 
     case PortNum.TELEMETRY_APP:
       handleTelemetryMessage(dataMessage, packet, identifier);
+      break;
+
+    case PortNum.WAYPOINT_APP:
+      handleWaypointMessage(dataMessage, packet, identifier);
+      break;
+
+    case PortNum.NEIGHBORINFO_APP:
+      handleNeighborInfoMessage(dataMessage, packet, identifier);
+      break;
+
+    case PortNum.TRACEROUTE_APP:
+      handleTraceRouteMessage(dataMessage, packet, identifier);
+      break;
+
+    case PortNum.MAP_REPORT_APP:
+      handleMapReportMessage(dataMessage, packet, identifier);
       break;
 
     default:

@@ -2,9 +2,16 @@ import { Protobuf } from '@meshtastic/js';
 import axios from 'axios';
 import { traccarOsmAndUrl } from '../config.js';
 import { checkDeviceExists, createDevice } from '../handlers/traccarClient.js';
-import { logInfo, logError } from '../utils/logger.js';
+import { logInfo, logError, logWarn, logDebug } from '../utils/logger.js';
 import { getDeviceCacheEntry } from '../utils/cache.js';
 
+/**
+ * Handles incoming Position messages
+ * @param dataMessage
+ * @param packet
+ * @param identifier
+ * @returns
+ */
 export async function handlePositionMessage(
   dataMessage: Protobuf.Mesh.Data,
   packet: Protobuf.Mesh.MeshPacket,
@@ -26,7 +33,7 @@ export async function handlePositionMessage(
     const batteryLevel = deviceEntry.lastDeviceMetrics?.batteryLevel ?? position.batteryLevel;
 
     // Log the position
-    logInfo('POSITION_APP', {
+    logDebug('POSITION_APP', {
       id: packet.id,
       from: identifier,
       to: packet.to.toString(16),
@@ -43,7 +50,7 @@ export async function handlePositionMessage(
     const deviceExists = await checkDeviceExists(identifier);
 
     if (!deviceExists) {
-      logError(`Device with identifier ${identifier} does not exist in Traccar.`);
+      logWarn(`Device with identifier ${identifier} does not exist in Traccar.`);
       // Optionally, create the device
       const deviceName = deviceEntry.lastNodeInfo?.longName || `Device ${identifier}`;
       const created = await createDevice(identifier, deviceName);
@@ -88,6 +95,6 @@ export async function handlePositionMessage(
       );
     }
   } catch (error) {
-    logError('Failed to parse Position message:', error);
+    logWarn('Failed to parse Position message:', error);
   }
 }

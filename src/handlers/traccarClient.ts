@@ -3,6 +3,11 @@ import { logInfo, logError } from '../utils/logger.js';
 import { traccarApiUrl, traccarApiToken } from '../config.js';
 import { getDeviceExists, setDeviceExists } from '../utils/cache.js';
 
+/**
+ * Check if a device exists in Traccar
+ * @param identifier
+ * @returns
+ */
 export async function checkDeviceExists(identifier: string): Promise<boolean> {
   // Check the cache first
   if (getDeviceExists(identifier)) {
@@ -33,6 +38,12 @@ export async function checkDeviceExists(identifier: string): Promise<boolean> {
   }
 }
 
+/**
+ * Create a device in Traccar
+ * @param identifier
+ * @param deviceName
+ * @returns
+ */
 export async function createDevice(identifier: string, deviceName: string): Promise<boolean> {
   // Set up headers with the API token
   const headers = {

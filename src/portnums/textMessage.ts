@@ -1,6 +1,12 @@
 import { Protobuf } from '@meshtastic/js';
-import { logInfo } from '../utils/logger.js';
+import { logDebug } from '../utils/logger.js';
 
+/**
+ * Handles incoming Text messages
+ * @param dataMessage
+ * @param packet
+ * @param identifier
+ */
 export function handleTextMessage(
   dataMessage: Protobuf.Mesh.Data,
   packet: Protobuf.Mesh.MeshPacket,
@@ -8,7 +14,7 @@ export function handleTextMessage(
 ) {
   const text = Buffer.from(dataMessage.payload).toString('utf-8');
 
-  logInfo('TEXT_MESSAGE_APP', {
+  logDebug('TEXT_MESSAGE_APP', {
     id: packet.id,
     from: identifier,
     to: packet.to.toString(16),

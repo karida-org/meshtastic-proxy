@@ -1,76 +1,88 @@
+// src/utils/logger.ts
 import dotenv from 'dotenv';
-import { LogLevel } from './types.js';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import winston from 'winston';
+import 'winston-daily-rotate-file';
 
 dotenv.config();
 
-const LOG_LEVEL = (process.env.LOG_LEVEL || 'INFO').toUpperCase() as LogLevel;
+// Use import.meta.url and fileURLToPath to get __filename and __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const levels: { [key in LogLevel]: number } = {
-  NONE: 0,
-  ERROR: 1,
-  WARN: 2,
-  INFO: 3,
-  DEBUG: 4,
+const LOG_LEVEL = (process.env.LOG_LEVEL || 'info').toLowerCase();
+
+const logDirectory = path.join(__dirname, '../../logs');
+
+// Ensure the logs directory exists
+if (!fs.existsSync(logDirectory)) {
+  fs.mkdirSync(logDirectory, { recursive: true });
+}
+
+// Define custom log levels
+const levels = {
+  error: 0,
+  warn: 1,
+  info: 2,
+  debug: 3,
 };
 
-const currentLogLevel = levels[LOG_LEVEL] ?? levels.INFO;
+// Create a Winston logger instance
+const logger = winston.createLogger({
+  level: LOG_LEVEL,
+  levels,
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.printf(
+      (info) => `${info.timestamp} [${info.level.toUpperCase()}]: ${info.message}`
+    )
+  ),
+  transports: [
+    // Console output
+    new winston.transports.Console(),
 
-/**
- * Log error message to console
- * @param message
- * @param error
- */
+    // File output with daily rotation
+    new winston.transports.DailyRotateFile({
+      filename: path.join(logDirectory, 'app-%DATE%.log'),
+      datePattern: 'YYYY-MM-DD',
+      maxSize: '20m',
+      maxFiles: '14d', // Keep logs for 14 days
+      zippedArchive: true,
+    }),
+  ],
+});
+
+// Create wrapper functions to match your existing API
 export function logError(message: string, error?: any): void {
-  if (currentLogLevel >= levels.ERROR) {
-    if (error) {
-      console.error(`[ERROR] ${message}:`, error);
-    } else {
-      console.error(`[ERROR] ${message}`);
-    }
+  if (error) {
+    logger.error(`${message}: ${error.stack || error}`);
+  } else {
+    logger.error(message);
   }
 }
 
-/**
- * Log warning message to console
- * @param message
- * @param data
- */
 export function logWarn(message: string, data?: any): void {
-  if (currentLogLevel >= levels.WARN) {
-    if (data) {
-      console.warn(`[WARN] ${message}:`, data);
-    } else {
-      console.warn(`[WARN] ${message}`);
-    }
+  if (data) {
+    logger.warn(`${message}: ${JSON.stringify(data)}`);
+  } else {
+    logger.warn(message);
   }
 }
 
-/**
- * Log info message to console
- * @param message
- * @param data
- */
 export function logInfo(message: string, data?: any): void {
-  if (currentLogLevel >= levels.INFO) {
-    if (data) {
-      console.log(`[INFO] ${message}:`, data);
-    } else {
-      console.log(`[INFO] ${message}`);
-    }
+  if (data) {
+    logger.info(`${message}: ${JSON.stringify(data)}`);
+  } else {
+    logger.info(message);
   }
 }
 
-/**
- * Log debug message to console
- * @param message
- * @param data
- */
 export function logDebug(message: string, data?: any): void {
-  if (currentLogLevel >= levels.DEBUG) {
-    if (data) {
-      console.debug(`[DEBUG] ${message}:`, data);
-    } else {
-      console.debug(`[DEBUG] ${message}`);
-    }
+  if (data) {
+    logger.debug(`${message}: ${JSON.stringify(data)}`);
+  } else {
+    logger.debug(message);
   }
 }

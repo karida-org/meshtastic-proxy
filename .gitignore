@@ -2,5 +2,8 @@ dist/
 node_modules/
 tmp/
 
+logs/*
+!logs/.keep
+
 .env
 .env.local

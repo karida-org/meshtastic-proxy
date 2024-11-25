@@ -12,11 +12,14 @@
     "axios": "^1.7.7",
     "dotenv": "^16.4.5",
     "mqtt": "^5.10.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "@types/mqtt": "^2.5.0",
     "@types/node": "^22.9.3",
+    "@types/winston": "^2.4.4",
     "tsx": "^4.19.2"
   },
   "scripts": {

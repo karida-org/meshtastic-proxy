@@ -1,7 +1,5 @@
 import { Protobuf } from '@meshtastic/js';
 
-export type LogLevel = 'NONE' | 'ERROR' | 'WARN' | 'INFO' | 'DEBUG';
-
 export interface DeviceCacheEntry {
   batteryLevel?: number;
   lastPosition?: Protobuf.Mesh.Position;

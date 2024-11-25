@@ -17,13 +17,11 @@
   "devDependencies": {
     "@types/mqtt": "^2.5.0",
     "@types/node": "^22.9.3",
-    "concurrently": "^9.1.0",
-    "nodemon": "^3.1.7"
+    "tsx": "^4.19.2"
   },
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "concurrently \"yarn watch\" \"nodemon dist/index.js\"",
-    "watch": "tsc --watch"
+    "dev": "tsx watch src/index.ts"
   }
 }

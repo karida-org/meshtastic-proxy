@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { logInfo, logError } from '../utils/logger.js';
+import logger from '../utils/logger.js';
 import { traccarApiUrl, traccarApiToken } from '../config.js';
 import { getDeviceExists, setDeviceExists } from '../utils/cache.js';
 
@@ -33,7 +33,7 @@ export async function checkDeviceExists(identifier: string): Promise<boolean> {
       return false;
     }
   } catch (error) {
-    logError('Failed to check device existence in Traccar', (error as any).response?.data || (error as any).message);
+    logger.error('Failed to check device existence in Traccar', (error as any).response?.data || (error as any).message);
     return false;
   }
 }
@@ -60,14 +60,14 @@ export async function createDevice(identifier: string, deviceName: string): Prom
     const response = await axios.post(`${traccarApiUrl}/api/devices`, deviceData, { headers });
     if (response.status === 200 || response.status === 201) {
       setDeviceExists(identifier, true);
-      logInfo(`Created device with identifier ${identifier}`);
+      logger.info(`Created device with identifier ${identifier}`);
       return true;
     } else {
-      logError(`Failed to create device: ${response.status} ${response.statusText}`);
+      logger.error(`Failed to create device: ${response.status} ${response.statusText}`);
       return false;
     }
   } catch (error) {
-    logError('Failed to create device in Traccar', (error as any).response?.data || (error as any).message);
+    logger.error('Failed to create device in Traccar', (error as any).response?.data || (error as any).message);
     return false;
   }
 }

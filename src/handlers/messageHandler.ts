@@ -1,7 +1,7 @@
 import { Protobuf } from '@meshtastic/js';
 import { decryptPayload } from './decryptionHandler.js';
 import { parseDataMessage } from './parsingHandler.js';
-import { logInfo, logWarn } from '../utils/logger.js';
+import logger from '../utils/logger.js';
 
 /**
  * Handles incoming messages from the MQTT broker
@@ -26,7 +26,7 @@ export async function handleMessage(topic: string, payload: Buffer): Promise<voi
           const dataMessage = Protobuf.Mesh.Data.fromBinary(decryptedPayload);
           await parseDataMessage(dataMessage, packet, serviceEnvelope);
         } catch (error) {
-          logWarn('Failed to decrypt packet:', error);
+          logger.warn('Failed to decrypt packet:', error);
         }
       } else if (variantCase === 'decrypted') {
         // Handle decrypted packets if necessary
@@ -34,6 +34,6 @@ export async function handleMessage(topic: string, payload: Buffer): Promise<voi
     }
   } catch (error) {
     // Handle parsing errors if necessary
-    logWarn('Failed to parse ServiceEnvelope:', error);
+    logger.warn('Failed to parse ServiceEnvelope:', error);
   }
 }

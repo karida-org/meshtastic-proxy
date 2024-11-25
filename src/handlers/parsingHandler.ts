@@ -1,6 +1,6 @@
 import { Protobuf } from '@meshtastic/js';
 import { PortNum } from '../utils/types.js';
-import { logInfo } from '../utils/logger.js';
+import logger from '../utils/logger.js';
 import { handleTextMessage } from '../portnums/textMessage.js';
 import { handlePositionMessage } from '../portnums/position.js';
 import { handleNodeInfoMessage } from '../portnums/nodeInfo.js';
@@ -26,7 +26,7 @@ export async function parseDataMessage(
   const channelId = serviceEnvelope.channelId.toString(16);
   const gatewayId = serviceEnvelope.gatewayId.toString(16);
 
-  logInfo(`Received Data Message on ${channelId} (via ${gatewayId})`, {
+  logger.info(`Received Data Message on ${channelId} (via ${gatewayId})`, {
     device: identifier,
     message: PortNum[portnum]
   });
@@ -65,7 +65,7 @@ export async function parseDataMessage(
       break;
 
     default:
-      logInfo('Received Data Message with unknown portnum:', dataMessage);
+      logger.info('Received Data Message with unknown portnum:', dataMessage);
       break;
   }
 }

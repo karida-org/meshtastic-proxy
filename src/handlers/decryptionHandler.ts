@@ -1,7 +1,7 @@
 import { Protobuf } from '@meshtastic/js';
 import crypto from 'crypto';
 import { aesKeyBase64 } from '../config.js';
-import { logError } from '../utils/logger.js';
+import logger from '../utils/logger.js';
 
 const KEY = Buffer.from(aesKeyBase64, 'base64');
 
@@ -33,7 +33,7 @@ export function decryptPayload(packet: Protobuf.Mesh.MeshPacket): Buffer {
   } else if (KEY.length === 32) {
     algorithm = 'aes-256-ctr';
   } else {
-    logError('Invalid key length');
+    logger.error('Invalid key length');
   }
 
   // Create cipher for decryption

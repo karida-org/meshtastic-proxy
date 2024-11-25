@@ -1,5 +1,5 @@
 import { Protobuf } from '@meshtastic/js';
-import { logDebug, logWarn } from '../utils/logger.js';
+import logger from '../utils/logger.js';
 import { getDeviceCacheEntry } from '../utils/cache.js';
 
 /**
@@ -21,13 +21,13 @@ export function handleWaypointMessage(
     deviceEntry.lastWaypoint = waypoint;
     deviceEntry.lastUpdateTime = Date.now();
 
-    logDebug('WAYPOINT_APP', {
+    logger.debug('WAYPOINT_APP', {
       id: packet.id,
       from: identifier,
       to: packet.to.toString(16),
       data: waypoint.toJSON(),
     });
   } catch (error) {
-    logWarn('Failed to parse Waypoint message:', error);
+    logger.warn('Failed to parse Waypoint message:', error);
   }
 }

@@ -1,5 +1,5 @@
 import { Protobuf } from '@meshtastic/js';
-import { logDebug, logWarn } from '../utils/logger.js';
+import logger from '../utils/logger.js';
 import { getDeviceCacheEntry } from '../utils/cache.js';
 
 /**
@@ -21,13 +21,13 @@ export function handleNeighborInfoMessage(
     deviceEntry.lastNeighborInfo = neighborInfo;
     deviceEntry.lastUpdateTime = Date.now();
 
-    logDebug('NEIGHBORINFO_APP', {
+    logger.debug('NEIGHBORINFO_APP', {
       id: packet.id,
       from: identifier,
       to: packet.to.toString(16),
       data: neighborInfo.toJSON(),
     });
   } catch (error) {
-    logWarn('Failed to parse NeighborInfo message:', error);
+    logger.warn('Failed to parse NeighborInfo message:', error);
   }
 }

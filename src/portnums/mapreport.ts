@@ -1,5 +1,5 @@
 import { Protobuf } from '@meshtastic/js';
-import { logDebug, logWarn } from '../utils/logger.js';
+import logger from '../utils/logger.js';
 import { getDeviceCacheEntry } from '../utils/cache.js';
 
 /**
@@ -21,13 +21,13 @@ export function handleMapReportMessage(
     deviceEntry.lastWaypoint = mapReport;
     deviceEntry.lastUpdateTime = Date.now();
 
-    logDebug('MAP_REPORT_APP', {
+    logger.debug('MAP_REPORT_APP', {
       id: packet.id,
       from: identifier,
       to: packet.to.toString(16),
       data: mapReport.toJSON(),
     });
   } catch (error) {
-    logWarn('Failed to parse MapReport message:', error);
+    logger.warn('Failed to parse MapReport message:', error);
   }
 }

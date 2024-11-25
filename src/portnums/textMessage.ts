@@ -1,5 +1,5 @@
 import { Protobuf } from '@meshtastic/js';
-import { logDebug } from '../utils/logger.js';
+import logger from '../utils/logger.js';
 
 /**
  * Handles incoming Text messages
@@ -14,7 +14,7 @@ export function handleTextMessage(
 ) {
   const text = Buffer.from(dataMessage.payload).toString('utf-8');
 
-  logDebug('TEXT_MESSAGE_APP', {
+  logger.debug('TEXT_MESSAGE_APP', {
     id: packet.id,
     from: identifier,
     to: packet.to.toString(16),

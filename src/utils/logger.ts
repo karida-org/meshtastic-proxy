@@ -1,4 +1,3 @@
-// src/utils/logger.ts
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
@@ -8,7 +7,6 @@ import 'winston-daily-rotate-file';
 
 dotenv.config();
 
-// Use import.meta.url and fileURLToPath to get __filename and __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -21,7 +19,7 @@ if (!fs.existsSync(logDirectory)) {
   fs.mkdirSync(logDirectory, { recursive: true });
 }
 
-// Define custom log levels
+// Define custom log levels (optional if using Winston's defaults)
 const levels = {
   error: 0,
   warn: 1,
@@ -35,10 +33,11 @@ const logger = winston.createLogger({
   levels,
   format: winston.format.combine(
     winston.format.timestamp(),
-    winston.format.printf(
-      (info) => `${info.timestamp} [${info.level.toUpperCase()}]: ${info.message}`
-    )
+    winston.format.errors({ stack: true }),
+    winston.format.splat(),
+    winston.format.json() // Output logs in JSON format
   ),
+  defaultMeta: { service: 'meshtastic-proxy' }, // Add default metadata
   transports: [
     // Console output
     new winston.transports.Console(),
@@ -52,37 +51,12 @@ const logger = winston.createLogger({
       zippedArchive: true,
     }),
   ],
+  exceptionHandlers: [
+    new winston.transports.File({ filename: path.join(logDirectory, 'exceptions.log') }),
+  ],
+  rejectionHandlers: [
+    new winston.transports.File({ filename: path.join(logDirectory, 'rejections.log') }),
+  ],
 });
 
-// Create wrapper functions to match your existing API
-export function logError(message: string, error?: any): void {
-  if (error) {
-    logger.error(`${message}: ${error.stack || error}`);
-  } else {
-    logger.error(message);
-  }
-}
-
-export function logWarn(message: string, data?: any): void {
-  if (data) {
-    logger.warn(`${message}: ${JSON.stringify(data)}`);
-  } else {
-    logger.warn(message);
-  }
-}
-
-export function logInfo(message: string, data?: any): void {
-  if (data) {
-    logger.info(`${message}: ${JSON.stringify(data)}`);
-  } else {
-    logger.info(message);
-  }
-}
-
-export function logDebug(message: string, data?: any): void {
-  if (data) {
-    logger.debug(`${message}: ${JSON.stringify(data)}`);
-  } else {
-    logger.debug(message);
-  }
-}
+export default logger;

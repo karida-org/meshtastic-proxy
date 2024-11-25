@@ -2,7 +2,7 @@ import { Protobuf } from '@meshtastic/js';
 import axios from 'axios';
 import { traccarOsmAndUrl } from '../config.js';
 import { checkDeviceExists, createDevice } from '../handlers/traccarClient.js';
-import { logInfo, logError, logWarn, logDebug } from '../utils/logger.js';
+import logger from '../utils/logger.js';
 import { getDeviceCacheEntry } from '../utils/cache.js';
 
 /**
@@ -33,7 +33,7 @@ export async function handlePositionMessage(
     const batteryLevel = deviceEntry.lastDeviceMetrics?.batteryLevel ?? position.batteryLevel;
 
     // Log the position
-    logDebug('POSITION_APP', {
+    logger.debug('POSITION_APP', {
       id: packet.id,
       from: identifier,
       to: packet.to.toString(16),
@@ -50,12 +50,12 @@ export async function handlePositionMessage(
     const deviceExists = await checkDeviceExists(identifier);
 
     if (!deviceExists) {
-      logWarn(`Device with identifier ${identifier} does not exist in Traccar.`);
+      logger.warn(`Device with identifier ${identifier} does not exist in Traccar.`);
       // Optionally, create the device
       const deviceName = deviceEntry.lastNodeInfo?.longName || `Device ${identifier}`;
       const created = await createDevice(identifier, deviceName);
       if (!created) {
-        logError(`Failed to create device with identifier ${identifier}. Skipping position update.`);
+        logger.error(`Failed to create device with identifier ${identifier}. Skipping position update.`);
         return;
       }
     }
@@ -87,14 +87,14 @@ export async function handlePositionMessage(
     // Send the request without authentication
     try {
       const response = await axios.get(osmandUrl);
-      logInfo(`Position sent to Traccar for device ${identifier}`, response.data);
+      logger.info(`Position sent to Traccar for device ${identifier}`, response.data);
     } catch (error) {
-      logError(
+      logger.error(
         `Failed to send position to Traccar for device ${identifier}`,
         (error as any).response?.data || (error as any).message
       );
     }
   } catch (error) {
-    logWarn('Failed to parse Position message:', error);
+    logger.warn('Failed to parse Position message:', error);
   }
 }

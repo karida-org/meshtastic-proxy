@@ -1,5 +1,5 @@
 import { Protobuf } from '@meshtastic/js';
-import { logDebug, logWarn } from '../utils/logger.js';
+import logger from '../utils/logger.js';
 import { getDeviceCacheEntry } from '../utils/cache.js';
 
 /**
@@ -20,13 +20,13 @@ export function handleNodeInfoMessage(
     const deviceEntry = getDeviceCacheEntry(identifier);
     deviceEntry.lastNodeInfo = nodeInfo;
 
-    logDebug('NODEINFO_APP', {
+    logger.debug('NODEINFO_APP', {
       id: packet.id,
       from: identifier,
       to: packet.to.toString(16),
       data: nodeInfo.toJSON(),
     });
   } catch (error) {
-    logWarn('Failed to parse NodeInfo message:', error);
+    logger.warn('Failed to parse NodeInfo message:', error);
   }
 }

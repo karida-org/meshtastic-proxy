@@ -1,5 +1,5 @@
 import { Protobuf } from '@meshtastic/js';
-import { logDebug, logWarn } from '../utils/logger.js';
+import logger from '../utils/logger.js';
 import { getDeviceCacheEntry } from '../utils/cache.js';
 
 /**
@@ -32,7 +32,7 @@ export function handleTelemetryMessage(
       deviceEntry.lastPowerMetrics = telemetry.variant.value as Protobuf.Telemetry.PowerMetrics;
     }
 
-    logDebug(`TELEMETRY_APP - ${variantType}`, {
+    logger.debug(`TELEMETRY_APP - ${variantType}`, {
       id: packet.id,
       from: identifier,
       to: packet.to.toString(16),
@@ -41,6 +41,6 @@ export function handleTelemetryMessage(
       data: variantValue,
     });
   } catch (error) {
-    logWarn('Failed to parse Telemetry message:', error);
+    logger.warn('Failed to parse Telemetry message:', error);
   }
 }

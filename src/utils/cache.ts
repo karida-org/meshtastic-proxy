@@ -1,5 +1,3 @@
-// cache.ts
-
 import { DeviceCacheEntry } from './types.js';
 
 // Cache for device data, keyed by device identifier

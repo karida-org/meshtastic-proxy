@@ -1,0 +1,9 @@
+services:
+  meshtastic-proxy:
+    build: .
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./.env:/app/.env:ro
+      - ./logs:/app/logs
+    restart: unless-stopped

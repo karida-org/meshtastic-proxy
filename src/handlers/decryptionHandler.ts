@@ -1,8 +1,9 @@
 import { Protobuf } from '@meshtastic/js';
 import crypto from 'crypto';
 import { aesKeyBase64 } from '../config.js';
+import { logError } from '../utils/logger.js';
 
-const AES_KEY = Buffer.from(aesKeyBase64, 'base64');
+const KEY = Buffer.from(aesKeyBase64, 'base64');
 
 /**
  * Decrypts the payload of an encrypted MeshPacket
@@ -25,8 +26,18 @@ export function decryptPayload(packet: Protobuf.Mesh.MeshPacket): Buffer {
   // Concatenate buffers to create nonce
   const nonce = Buffer.concat([packetIdBuffer, fromIdBuffer]);
 
+  // Determine algorithm based on key length
+  let algorithm: string = '';
+  if (KEY.length === 16) {
+    algorithm = 'aes-128-ctr';
+  } else if (KEY.length === 32) {
+    algorithm = 'aes-256-ctr';
+  } else {
+    logError('Invalid key length');
+  }
+
   // Create cipher for decryption
-  const decipher = crypto.createDecipheriv('aes-128-ctr', AES_KEY, nonce);
+  const decipher = crypto.createDecipheriv(algorithm, KEY, nonce);
 
   // Decrypt the payload
   const decrypted = Buffer.concat([

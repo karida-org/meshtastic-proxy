@@ -70,7 +70,7 @@ export async function parseDataMessage(
       break;
 
     default:
-      logger.info('Received Data Message with unknown portnum:', dataMessage);
+      logger.info(`Received Data Message with unknown portnum ${portnum}:`, dataMessage);
       break;
   }
 }

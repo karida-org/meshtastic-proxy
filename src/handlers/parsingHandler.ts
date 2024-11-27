@@ -19,10 +19,10 @@ import { handleRoutingMessage } from '../portnums/routing.js';
  */
 export async function parseDataMessage(
   dataMessage: Protobuf.Mesh.Data,
-  packet: Protobuf.Mesh.MeshPacket,
   serviceEnvelope: Protobuf.Mqtt.ServiceEnvelope
 ): Promise<void> {
   const { portnum } = dataMessage;
+  const packet = serviceEnvelope.packet as Protobuf.Mesh.MeshPacket;
   const identifier = packet.from.toString(16); // Device identifier in hex
   const channelId = serviceEnvelope.channelId.toString(16);
   const gatewayId = serviceEnvelope.gatewayId.toString(16);

@@ -24,7 +24,7 @@ export async function handleMessage(topic: string, payload: Buffer): Promise<voi
         try {
           const decryptedPayload = decryptPayload(packet);
           const dataMessage = Protobuf.Mesh.Data.fromBinary(decryptedPayload);
-          await parseDataMessage(dataMessage, packet, serviceEnvelope);
+          await parseDataMessage(dataMessage, serviceEnvelope);
         } catch (error) {
           logger.warn('Failed to decrypt packet. Skipping message.');
         }

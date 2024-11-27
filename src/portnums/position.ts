@@ -26,7 +26,7 @@ export async function handlePositionMessage(
 
     // skip if latitude and longitude are not valid
     if (isNaN(latitude) || isNaN(longitude)) {
-      logger.warn('Invalid latitude or longitude:', position.toJSON());
+      logger.debug('Received Invalid latitude or longitude:', position.toJSON());
       return; // skip
     }
 

@@ -7,6 +7,7 @@ export interface DeviceCacheEntry {
   lastEnvironmentMetrics?: Protobuf.Telemetry.EnvironmentMetrics;
   lastPowerMetrics?: Protobuf.Telemetry.PowerMetrics;
   lastWaypoint?: Protobuf.Mesh.Waypoint;
+  lastRouting?: Protobuf.Mesh.Routing;
   lastNeighborInfo?: Protobuf.Mesh.NeighborInfo;
   lastTraceRoute?: Protobuf.Mesh.RouteDiscovery;
   lastMapReport?: Protobuf.Mesh.MapReport;
@@ -19,6 +20,7 @@ export enum PortNum {
   TEXT_MESSAGE_APP = 1,
   POSITION_APP = 3,
   NODEINFO_APP = 4,
+  ROUTING_APP = 5,
   WAYPOINT_APP = 8,
   TELEMETRY_APP = 67,
   TRACEROUTE_APP = 70,

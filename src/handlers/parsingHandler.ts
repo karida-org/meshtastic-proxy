@@ -9,6 +9,7 @@ import { handleWaypointMessage } from '../portnums/waypoint.js';
 import { handleNeighborInfoMessage } from '../portnums/neighborInfo.js';
 import { handleTraceRouteMessage } from '../portnums/traceroute.js';
 import { handleMapReportMessage } from '../portnums/mapreport.js';
+import { handleRoutingMessage } from '../portnums/routing.js';
 
 /**
  * Parses a Data message and delegates to the appropriate handler
@@ -62,6 +63,10 @@ export async function parseDataMessage(
 
     case PortNum.MAP_REPORT_APP:
       handleMapReportMessage(dataMessage, packet, identifier);
+      break;
+
+    case PortNum.ROUTING_APP:
+      handleRoutingMessage(dataMessage, packet, identifier);
       break;
 
     default:

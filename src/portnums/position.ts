@@ -24,6 +24,12 @@ export async function handlePositionMessage(
     const altitude = position.altitude;
     const timestamp = position.time * 1000; // timestamp in milliseconds
 
+    // skip if latitude and longitude are not valid
+    if (isNaN(latitude) || isNaN(longitude)) {
+      logger.warn('Invalid latitude or longitude:', position.toJSON());
+      return; // skip
+    }
+
     // Update the cache
     const deviceEntry = getDeviceCacheEntry(identifier);
     deviceEntry.lastPosition = position;

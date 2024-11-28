@@ -1,5 +1,6 @@
 import { Protobuf } from '@meshtastic/js';
 import logger from '../utils/logger.js';
+import { makeFiwareRequest } from '../handlers/fiwareClient.js';
 import { getDeviceCacheEntry } from '../utils/cache.js';
 
 /**
@@ -15,6 +16,16 @@ export function handleTelemetryMessage(
 ) {
   try {
     const telemetry = Protobuf.Telemetry.Telemetry.fromBinary(dataMessage.payload);
+
+    // Test request to FIWARE broker
+    (async () => {
+      try {
+        const data = await makeFiwareRequest('/entities');
+        logger.debug(data);
+      } catch (error) {
+        logger.error('Error making FIWARE request:', error);
+      }
+    })();
 
     // Get the variant type (e.g., 'deviceMetrics', 'environmentMetrics')
     const variantType = telemetry.variant.case;

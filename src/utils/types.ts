@@ -15,6 +15,13 @@ export interface DeviceCacheEntry {
   lastUpdateTime?: number;
 }
 
+export interface AccessTokenCache {
+  token: string;
+  token_type?: string;
+  scope?: string;
+  expiresAt: number;
+}
+
 // Portnums that are handled by this application
 export enum PortNum {
   TEXT_MESSAGE_APP = 1,

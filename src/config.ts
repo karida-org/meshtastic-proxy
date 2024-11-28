@@ -19,3 +19,11 @@ export const aesKeyBase64 = process.env.AES_KEY || '1PG7OiApB1nwvP+rz05pAQ=='; /
 
 // DuckDB path
 export const duckdbPath = process.env.DUCKDB_PATH || 'data/meshtastic.db';
+
+// FIWARE and WSO2 configuration
+export const fiwareBroker = process.env.FIWARE_BROKER || 'https://fiware.example.com/orion/v2';
+export const fiwareService = process.env.FIWARE_SERVICE || 'tenant_id';
+export const fiwareServicePath = process.env.FIWARE_SERVICE_PATH || '/';
+export const wso2AuthUrl = process.env.WSO2_AUTH_URL || 'https://wso2.example.com/oauth2/token';
+export const wso2ConsumerKey = process.env.WSO2_CONSUMER_KEY || 'consumer_key';
+export const wso2ConsumerSecret = process.env.WSO2_CONSUMER_SECRET || 'consumer_secret';

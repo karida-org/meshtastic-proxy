@@ -11,6 +11,7 @@
     "@meshtastic/js": "^2.3.7-5",
     "axios": "^1.7.7",
     "dotenv": "^16.4.5",
+    "duckdb": "^1.1.3",
     "mqtt": "^5.10.2",
     "typescript": "^5.7.2",
     "winston": "^3.17.0",

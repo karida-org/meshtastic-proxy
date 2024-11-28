@@ -1,5 +1,7 @@
 import logger from './utils/logger.js';
-import './mqttClient.js';
 
-// Log that the Meshtastic MQTT Client has started
-logger.info("Meshtastic MQTT Client started...");
+logger.info("Connecting to DuckDB database...");
+import './database.js';
+
+logger.info("Starting MQTT Client connection...");
+import './mqttClient.js';

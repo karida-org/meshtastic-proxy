@@ -16,3 +16,6 @@ export const traccarApiToken = process.env.TRACCAR_API_TOKEN || '';
 
 // AES encryption key
 export const aesKeyBase64 = process.env.AES_KEY || '1PG7OiApB1nwvP+rz05pAQ=='; // default "AQ==" decryption key
+
+// DuckDB path
+export const duckdbPath = process.env.DUCKDB_PATH || 'data/meshtastic.db';

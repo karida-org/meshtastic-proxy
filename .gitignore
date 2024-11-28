@@ -5,5 +5,8 @@ tmp/
 logs/*
 !logs/.keep
 
+data/*
+!data/.keep
+
 .env
 .env.local

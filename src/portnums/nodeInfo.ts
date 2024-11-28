@@ -11,14 +11,21 @@ export function initNodeInfoDatabase() {
     `
     CREATE TABLE IF NOT EXISTS NodeInfo (
       id TEXT PRIMARY KEY,
-      longName TEXT,
-      shortName TEXT,
-      hwModel TEXT,
-      role TEXT,
       data JSON,
       created_at TIMESTAMP DEFAULT NOW(),
       updated_at TIMESTAMP DEFAULT NOW()
-    )
+    );
+
+    CREATE OR REPLACE VIEW NodeInfoView AS
+    SELECT
+      id,
+      data->>'longName' AS longName,
+      data->>'shortName' AS shortName,
+      data->>'hwModel' AS hwModel,
+      data->>'role' AS role,
+      created_at,
+      updated_at
+    FROM NodeInfo;
     `,
     (err) => {
       if (err) {
@@ -35,22 +42,15 @@ export function initNodeInfoDatabase() {
  * @param data
  */
 function insertNodeInfo(identifier: string, data: Protobuf.Mesh.User) {
-
-  const json = data.toJSON();
-
   connection.run(
     `
-    INSERT INTO NodeInfo (id, longName, shortName, hwModel, role, data)
-    VALUES (?::TEXT, ?::Text, ?::Text, ?::TEXT, ?::TEXT, ?::JSON)
+    INSERT INTO NodeInfo (id, data)
+    VALUES (?::TEXT, ?::JSON)
     ON CONFLICT(id) DO UPDATE SET
-      longName = excluded.longName,
-      shortName = excluded.shortName,
-      hwModel = excluded.hwModel,
-      role = excluded.role,
       data = excluded.data::JSON,
       updated_at = NOW()
     `,
-    identifier, json.longName, json.shortName, json.hwModel, json.role, JSON.stringify(json),
+    identifier, JSON.stringify(data.toJSON()),
     (err) => {
       if (err) {
         logger.error('Failed to insert NodeInfo data:', err);
@@ -61,7 +61,7 @@ function insertNodeInfo(identifier: string, data: Protobuf.Mesh.User) {
   );
 
   if (logger.level === 'debug') {
-    connection.all(`SELECT id, longName, shortName, hwModel, role, created_at, updated_at FROM NodeInfo`,
+    connection.all(`SELECT * FROM NodeInfoView`,
       (err, rows) => {
         if (err) {
           logger.error('Failed to fetch NodeInfo data:', err);

@@ -2,7 +2,6 @@ import { Protobuf } from '@meshtastic/js';
 import logger from '../utils/logger.js';
 import { getDeviceCacheEntry } from '../utils/cache.js';
 import { connection } from '../database.js';
-import test from 'node:test';
 
 /**
  * Initializes the NodeInfo database table
@@ -30,7 +29,11 @@ export function initNodeInfoDatabase() {
     }
   );
 }
-
+/**
+ * Inserts NodeInfo data into the database
+ * @param identifier
+ * @param data
+ */
 function insertNodeInfo(identifier: string, data: Protobuf.Mesh.User) {
 
   const json = data.toJSON();

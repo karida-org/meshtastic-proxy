@@ -67,6 +67,7 @@ export async function upsertEntitiesBatch(entities: Array<{ id: string; type: st
   try {
     const response = await makeFiwareRequest(endpoint, payload, 'POST', 'application/json');
     logger.debug('FIWARE batch operation successful', { response });
+    logger.info(`Upserted ${entities.length} entities to FIWARE Context Broker.`);
 
     // Make a GET request to query all entities for debugging purposes
     // const queryResponse = await makeFiwareRequest('/entities', undefined, 'GET');

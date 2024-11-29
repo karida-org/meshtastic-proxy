@@ -17,7 +17,7 @@ RUN yarn install --production
 
 COPY --from=build /app/dist ./dist
 
-RUN addgroup appuser && adduser -S -G appuser appuser
+RUN groupadd appuser && useradd -r -g appuser appuser
 RUN chown -R appuser:appuser /app
 USER appuser
 

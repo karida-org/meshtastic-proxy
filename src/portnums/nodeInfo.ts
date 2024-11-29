@@ -1,13 +1,14 @@
 import { Protobuf } from '@meshtastic/js';
 import logger from '../utils/logger.js';
 import { getDeviceCacheEntry } from '../utils/cache.js';
-import { connection } from '../database.js';
+import { connection as dbcon } from '../database.js';
+import { upsertDeviceEntity } from '../handlers/fiwareClient.js';
 
 /**
  * Initializes the NodeInfo database table
  */
 export function initNodeInfoDatabase() {
-  connection.run(
+  dbcon.run(
     `
     CREATE TABLE IF NOT EXISTS NodeInfo (
       id TEXT PRIMARY KEY,
@@ -36,13 +37,14 @@ export function initNodeInfoDatabase() {
     }
   );
 }
+
 /**
  * Inserts NodeInfo data into the database
  * @param identifier
  * @param data
  */
 function insertNodeInfo(identifier: string, data: Protobuf.Mesh.User) {
-  connection.run(
+  dbcon.run(
     `
     INSERT INTO NodeInfo (id, data)
     VALUES (?::TEXT, ?::JSON)
@@ -61,7 +63,7 @@ function insertNodeInfo(identifier: string, data: Protobuf.Mesh.User) {
   );
 
   if (logger.level === 'debug') {
-    connection.all(`SELECT * FROM NodeInfoView`,
+    dbcon.all(`SELECT * FROM NodeInfoView`,
       (err, rows) => {
         if (err) {
           logger.error('Failed to fetch NodeInfo data:', err);
@@ -93,6 +95,10 @@ export function handleNodeInfoMessage(
 
     // Insert the NodeInfo data into the database
     insertNodeInfo(identifier, nodeInfo);
+
+    // Create or update entity on FIWARE Context Broker
+    const {longName, shortName, macaddr, hwModel, isLicensed, role, publicKey} = nodeInfo.toJSON();
+    upsertDeviceEntity(identifier, 'Device', {longName, shortName, hwModel, role});
 
     logger.debug('NODEINFO_APP', {
       id: packet.id,

@@ -27,3 +27,6 @@ export const fiwareServicePath = process.env.FIWARE_SERVICE_PATH || '/';
 export const wso2AuthUrl = process.env.WSO2_AUTH_URL || 'https://wso2.example.com/oauth2/token';
 export const wso2ConsumerKey = process.env.WSO2_CONSUMER_KEY || 'consumer_key';
 export const wso2ConsumerSecret = process.env.WSO2_CONSUMER_SECRET || 'consumer_secret';
+
+// Namespace for URN
+export const urnNamespace = process.env.URN_NAMESPACE || 'meshtastic';

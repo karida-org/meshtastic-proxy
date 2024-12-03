@@ -13,6 +13,7 @@ export const password = process.env.MQTT_PASSWORD || '';
 export const traccarApiUrl = process.env.TRACCAR_API_URL || 'http://your.traccar.server:8082';
 export const traccarOsmAndUrl = process.env.TRACCAR_OSMAND_URL || 'http://your.traccar.server:5055';
 export const traccarApiToken = process.env.TRACCAR_API_TOKEN || '';
+export const traccarIdPrefix = process.env.TRACCAR_ID_PREFIX || 'msh-';
 
 // AES encryption key
 export const aesKeyBase64 = process.env.AES_KEY || '1PG7OiApB1nwvP+rz05pAQ=='; // default "AQ==" decryption key

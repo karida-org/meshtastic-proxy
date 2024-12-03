@@ -1,6 +1,6 @@
 import { Protobuf } from '@meshtastic/js';
 import axios from 'axios';
-import { traccarOsmAndUrl } from '../config.js';
+import { traccarOsmAndUrl, traccarIdPrefix } from '../config.js';
 import { checkDeviceExists, createDevice } from '../handlers/traccarClient.js';
 import logger from '../utils/logger.js';
 import { getDeviceCacheEntry } from '../utils/cache.js';
@@ -53,22 +53,23 @@ export async function handlePositionMessage(
     });
 
     // Check if device exists in Traccar
-    const deviceExists = await checkDeviceExists(identifier);
+    const traccarIdentifier = traccarIdPrefix + identifier;
+    const deviceExists = await checkDeviceExists(traccarIdentifier);
 
     if (!deviceExists) {
-      logger.warn(`Device with identifier ${identifier} does not exist in Traccar.`);
+      logger.warn(`Device with identifier ${traccarIdentifier} does not exist in Traccar.`);
       // Optionally, create the device
       const deviceName = deviceEntry.lastNodeInfo?.longName || `Device ${identifier}`;
-      const created = await createDevice(identifier, deviceName);
+      const created = await createDevice(traccarIdentifier, deviceName);
       if (!created) {
-        logger.error(`Failed to create device with identifier ${identifier}. Skipping position update.`);
+        logger.error(`Failed to create device with identifier ${traccarIdentifier}. Skipping position update.`);
         return;
       }
     }
 
     // Build the OsmAnd protocol parameters
     const params: Record<string, string> = {
-      id: identifier,
+      id: traccarIdentifier,
       lat: latitude.toString(),
       lon: longitude.toString(),
       timestamp: timestamp.toString(),
@@ -93,10 +94,10 @@ export async function handlePositionMessage(
     // Send the request without authentication
     try {
       const response = await axios.get(osmandUrl);
-      logger.info(`Position sent to Traccar for device ${identifier}`, response.data);
+      logger.info(`Position sent to Traccar for device ${traccarIdentifier}`, response.data);
     } catch (error) {
       logger.error(
-        `Failed to send position to Traccar for device ${identifier}`,
+        `Failed to send position to Traccar for device ${traccarIdentifier}`,
         (error as any).response?.data || (error as any).message
       );
     }
